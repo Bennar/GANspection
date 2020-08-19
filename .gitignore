@@ -1,5 +1,5 @@
 BiGAN/data/
 BiGAN/Runs/
 BiGAN/__pycache__/
-**/__pycache__
-*.pyc
+__pycache__/
+*.py[cod]
