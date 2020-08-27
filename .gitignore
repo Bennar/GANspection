@@ -3,3 +3,6 @@ BiGAN/Runs/
 BiGAN/__pycache__/
 __pycache__/
 *.py[cod]
+BiGAN/*.err
+BiGAN/*.out
+BiGAN/batch_run.sh
