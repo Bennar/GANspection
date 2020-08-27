@@ -22,7 +22,7 @@ torch.cuda.manual_seed_all(1)
 
 # training hyperparameters
 BATCH_SIZE = 64
-ITER = 1000
+ITER = 10
 IMAGE_SIZE = 32
 NUM_CHANNELS = 1
 DIM = 128
@@ -125,9 +125,9 @@ def main():
   device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
   wali = create_WALI().to(device)
 
-  optimizerEG = Adam(list(wali.get_encoder_parameters()) + list(wali.get_generator_parameters()), 
+  optimizerEG = Adam(list(wali.get_encoder_parameters()) + list(wali.get_generator_parameters()),
     lr=LEARNING_RATE, betas=(BETA1, BETA2))
-  optimizerC = Adam(wali.get_critic_parameters(), 
+  optimizerC = Adam(wali.get_critic_parameters(),
     lr=LEARNING_RATE, betas=(BETA1, BETA2))
 
 # for 3 channels
@@ -145,11 +145,11 @@ def main():
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))])
   mold_img = ImageFolder('data/folder/train', transform)
-  
+
   loader = data.DataLoader(mold_img, BATCH_SIZE, shuffle=True)
-  
+
   noise = torch.randn(64, NLAT, 1, 1, device=device)
-  
+
   EG_losses, C_losses = [], []
   curr_iter = C_iter = EG_iter = 0
   C_update, EG_update = True, False
@@ -200,7 +200,7 @@ def main():
         # plot reconstructed images and samples
         wali.eval()
         real_x, rect_x = init_x[:32], wali.reconstruct(init_x[:32]).detach_()
-        rect_imgs = torch.cat((real_x.unsqueeze(1), rect_x.unsqueeze(1)), dim=1) 
+        rect_imgs = torch.cat((real_x.unsqueeze(1), rect_x.unsqueeze(1)), dim=1)
         rect_imgs = rect_imgs.view(64, NUM_CHANNELS, IMAGE_SIZE, IMAGE_SIZE).cpu()
         genr_imgs = wali.generate(noise).detach_().cpu()
         utils.save_image(rect_imgs * 0.5 + 0.5, 'Runs/rect%d.png' % curr_iter)
@@ -211,15 +211,15 @@ def main():
       if curr_iter % (ITER // 10) == 0:
         torch.save(wali.state_dict(), 'Runs/%d.ckpt' % curr_iter)
 
-  # plot training loss curve
-  plt.figure(figsize=(10, 5))
-  plt.title('Training loss curve')
-  plt.plot(EG_losses, label='Encoder + Generator')
-  plt.plot(C_losses, label='Critic')
-  plt.xlabel('Iterations')
-  plt.ylabel('Loss')
-  plt.legend()
-  plt.savefig('loss_curve.png')
+#   # plot training loss curve
+#   plt.plot(EG_losses, label='Encoder + Generator')
+#   plt.plot(C_losses, label='Critic')
+# # plt.figure(figsize=(10, 5))
+#   plt.title('Training loss curve')
+#   plt.xlabel('Iterations')
+#   plt.ylabel('Loss')
+#   plt.legend()
+#   plt.savefig('loss_curve.png')
 
 
 if __name__ == "__main__":
