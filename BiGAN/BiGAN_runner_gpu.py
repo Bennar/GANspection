@@ -36,29 +36,33 @@ LEARNING_RATE = 1e-4
 BETA1 = 0.5
 BETA2 = 0.9
 
+# Defining the size of the CNN part of the network
+
 layer_params = [[8,8,4,4,2,2],
                 [4,4,2,2,2,2],
                 [2,2,1,1,0,0]]
 
+num_channels = [NUM_CHANNELS, 32, 64, 128, 256, 512, NLAT ]
+
 def create_encoder():
   mapping = nn.Sequential(
-    Conv2d(NUM_CHANNELS, DIM, layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
-    Conv2d(DIM, DIM * 2, layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
-    Conv2d(DIM * 2, DIM * 4, layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(DIM * 4, DIM * 4, layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(DIM * 4, DIM * 4, layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(DIM * 4, NLAT, layer_params[0][5], layer_params[1][5], layer_params[2][5]))
+    Conv2d(NUM_CHANNELS, num_channels[1], layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
+    Conv2d(num_channels[1],num_channels[2], layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
+    Conv2d(num_channels[2],num_channels[3], layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    Conv2d(num_channels[3],num_channels[4], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    Conv2d(num_channels[4],num_channels[5], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    Conv2d(num_channels[5],num_channels[6], NLAT, layer_params[0][5], layer_params[1][5], layer_params[2][5]))
   return DeterministicConditional(mapping)
 
 
 def create_generator():
   mapping = nn.Sequential(
-    ConvTranspose2d(NLAT, DIM * 4, layer_params[0][5], layer_params[1][5], layer_params[2][5], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(NLAT, DIM * 4, layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(NLAT, DIM * 4, layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(DIM * 4, DIM * 2,  layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
-    ConvTranspose2d(DIM * 2, DIM,  layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
-    ConvTranspose2d(DIM, NUM_CHANNELS,  layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), Tanh())
+    ConvTranspose2d(num_channels[6],num_channels[5], layer_params[0][5], layer_params[1][5], layer_params[2][5], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[5],num_channels[4], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[4],num_channels[3], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[3],num_channels[2],  layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[2],num_channels[1],  layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[1],num_channels[0],  layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), Tanh())
   return DeterministicConditional(mapping)
 
 
