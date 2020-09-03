@@ -23,7 +23,7 @@ torch.cuda.manual_seed_all(1)
 # training hyperparameters
 BATCH_SIZE = 64
 ITER = 1000
-IMAGE_SIZE = 32
+IMAGE_SIZE = 256
 NUM_CHANNELS = 1
 DIM = 128
 NLAT = 100
@@ -68,13 +68,12 @@ def create_generator():
 
 def create_critic():
   x_mapping = nn.Sequential(
-    Conv2d(NUM_CHANNELS, DIM, layer_params[0][0], layer_params[1][0], layer_params[2][0]), LeakyReLU(LEAK),
-    Conv2d(DIM, DIM * 2, layer_params[0][1], layer_params[1][1], layer_params[2][1]), LeakyReLU(LEAK),
-    Conv2d(DIM * 2, DIM * 4, layer_params[0][2], layer_params[1][2], layer_params[2][2]),LeakyReLU(LEAK),
-    Conv2d(DIM * 4, DIM * 4, layer_params[0][3], layer_params[1][3], layer_params[2][3]), LeakyReLU(LEAK),
-    Conv2d(DIM * 4, DIM * 4, layer_params[0][4], layer_params[1][4], layer_params[2][4]), LeakyReLU(LEAK),
-    Conv2d(DIM * 4, NLAT, layer_params[0][5], layer_params[1][5], layer_params[2][5]), LeakyReLU(LEAK))
-
+    Conv2d(NUM_CHANNELS, num_channels[1], layer_params[0][0], layer_params[1][0], layer_params[2][0]), LeakyReLU(LEAK),
+    Conv2d(num_channels[1], num_channels[2], layer_params[0][1], layer_params[1][1], layer_params[2][1]), LeakyReLU(LEAK),
+    Conv2d(num_channels[2], num_channels[3], layer_params[0][2], layer_params[1][2], layer_params[2][2]),LeakyReLU(LEAK),
+    Conv2d(num_channels[3], num_channels[4] layer_params[0][3], layer_params[1][3], layer_params[2][3]), LeakyReLU(LEAK),
+    Conv2d(num_channels[4], num_channels[5], layer_params[0][4], layer_params[1][4], layer_params[2][4]), LeakyReLU(LEAK),
+    Conv2d(num_channels[5], num_channels[6], layer_params[0][5], layer_params[1][5], layer_params[2][5]), LeakyReLU(LEAK))
 
   z_mapping = nn.Sequential(
     Conv2d(NLAT, 512, 1, 1, 0), LeakyReLU(LEAK),
@@ -111,7 +110,7 @@ def main():
         transforms.Grayscale(1),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))])
-  mold_img = ImageFolder('D:/Desk/Kandidatspeciale - Ganspection/Kode/GANspection/BiGAN/data/folder/train', transform)
+  mold_img = ImageFolder('data/folder/train', transform)
   
   loader = data.DataLoader(mold_img, BATCH_SIZE, shuffle=True)
   
@@ -170,23 +169,25 @@ def main():
         rect_imgs = torch.cat((real_x.unsqueeze(1), rect_x.unsqueeze(1)), dim=1) 
         rect_imgs = rect_imgs.view(64, NUM_CHANNELS, IMAGE_SIZE, IMAGE_SIZE).cpu()
         genr_imgs = wali.generate(noise).detach_().cpu()
-        utils.save_image(rect_imgs * 0.5 + 0.5, 'Runs/rect%d.png' % curr_iter)
-        utils.save_image(genr_imgs * 0.5 + 0.5, 'Runs/genr%d.png' % curr_iter)
+        utils.save_image(rect_imgs * 0.5 + 0.5, 'Runs/f_size/rect%d.png' % curr_iter)
+        utils.save_image(genr_imgs * 0.5 + 0.5, 'Runs/fsize/genr%d.png' % curr_iter)
         wali.train()
 
       # save model
       if curr_iter % (ITER // 10) == 0:
-        torch.save(wali.state_dict(), 'Runs/%d.ckpt' % curr_iter)
+        torch.save(wali.state_dict(), 'Runs/fsize/%d.ckpt' % curr_iter)
 
   # plot training loss curve
-  plt.figure(figsize=(10, 5))
-  plt.title('Training loss curve')
-  plt.plot(EG_losses, label='Encoder + Generator')
-  plt.plot(C_losses, label='Critic')
-  plt.xlabel('Iterations')
-  plt.ylabel('Loss')
-  plt.legend()
-  plt.savefig('loss_curve.png')
+# =============================================================================
+#   plt.figure(figsize=(10, 5))
+#   plt.title('Training loss curve')
+#   plt.plot(EG_losses, label='Encoder + Generator')
+#   plt.plot(C_losses, label='Critic')
+#   plt.xlabel('Iterations')
+#   plt.ylabel('Loss')
+#   plt.legend()
+#   plt.savefig('loss_curve.png')
+# =============================================================================
 
 
 if __name__ == "__main__":
