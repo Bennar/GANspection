@@ -22,7 +22,7 @@ torch.cuda.manual_seed_all(1)
 
 # training hyperparameters
 BATCH_SIZE = 64
-ITER = 10
+ITER = 200
 IMAGE_SIZE = 32
 NUM_CHANNELS = 1
 DIM = 128
@@ -52,8 +52,7 @@ def create_encoder():
     Conv2d(NUM_CHANNELS, DIM, 4, 2, 1, bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
     Conv2d(DIM, DIM * 2, 4, 2, 1, bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
     Conv2d(DIM * 2, DIM * 4, 4, 2, 1, bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(DIM * 4, DIM * 4, 4, 1, 0, bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(DIM * 4, NLAT, 1, 1, 0))
+    Conv2d(DIM * 4, NLAT, 4, 1, 0, bias=False))
   return DeterministicConditional(mapping)
 
 # def create_generator():

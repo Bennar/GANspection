@@ -22,7 +22,7 @@ torch.cuda.manual_seed_all(1)
 
 # training hyperparameters
 BATCH_SIZE = 64
-ITER = 1000
+ITER = 3000
 IMAGE_SIZE = 256
 NUM_CHANNELS = 1
 DIM = 128
@@ -46,22 +46,22 @@ num_channels = [NUM_CHANNELS, 32, 64, 128, 256, 512, NLAT ]
 
 def create_encoder():
   mapping = nn.Sequential(
-    Conv2d(NUM_CHANNELS, num_channels[1], layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
-    Conv2d(num_channels[1],num_channels[2], layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
-    Conv2d(num_channels[2],num_channels[3], layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(num_channels[3],num_channels[4], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(num_channels[4],num_channels[5], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    Conv2d(num_channels[5],num_channels[6], NLAT, layer_params[0][5], layer_params[1][5], layer_params[2][5]))
+    Conv2d(NUM_CHANNELS, num_channels[1], layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), BatchNorm2d(num_channels[1]), ReLU(inplace=True),
+    Conv2d(num_channels[1],num_channels[2], layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(num_channels[2]), ReLU(inplace=True),
+    Conv2d(num_channels[2],num_channels[3], layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(num_channels[3]), ReLU(inplace=True),
+    Conv2d(num_channels[3],num_channels[4], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(num_channels[4]), ReLU(inplace=True),
+    Conv2d(num_channels[4],num_channels[5], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(num_channels[5]), ReLU(inplace=True),
+    Conv2d(num_channels[5],num_channels[6], layer_params[0][5], layer_params[1][5], layer_params[2][5]))
   return DeterministicConditional(mapping)
 
 
 def create_generator():
   mapping = nn.Sequential(
-    ConvTranspose2d(num_channels[6],num_channels[5], layer_params[0][5], layer_params[1][5], layer_params[2][5], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(num_channels[5],num_channels[4], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(num_channels[4],num_channels[3], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(DIM * 4), ReLU(inplace=True),
-    ConvTranspose2d(num_channels[3],num_channels[2],  layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(DIM * 2), ReLU(inplace=True),
-    ConvTranspose2d(num_channels[2],num_channels[1],  layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(DIM), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[6],num_channels[5], layer_params[0][5], layer_params[1][5], layer_params[2][5], bias=False), BatchNorm2d(num_channels[5]), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[5],num_channels[4], layer_params[0][4], layer_params[1][4], layer_params[2][4], bias=False), BatchNorm2d(num_channels[4]), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[4],num_channels[3], layer_params[0][3], layer_params[1][3], layer_params[2][3], bias=False), BatchNorm2d(num_channels[3]), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[3],num_channels[2],  layer_params[0][2], layer_params[1][2], layer_params[2][2], bias=False), BatchNorm2d(num_channels[2]), ReLU(inplace=True),
+    ConvTranspose2d(num_channels[2],num_channels[1],  layer_params[0][1], layer_params[1][1], layer_params[2][1], bias=False), BatchNorm2d(num_channels[1]), ReLU(inplace=True),
     ConvTranspose2d(num_channels[1],num_channels[0],  layer_params[0][0], layer_params[1][0], layer_params[2][0], bias=False), Tanh())
   return DeterministicConditional(mapping)
 
@@ -71,7 +71,7 @@ def create_critic():
     Conv2d(NUM_CHANNELS, num_channels[1], layer_params[0][0], layer_params[1][0], layer_params[2][0]), LeakyReLU(LEAK),
     Conv2d(num_channels[1], num_channels[2], layer_params[0][1], layer_params[1][1], layer_params[2][1]), LeakyReLU(LEAK),
     Conv2d(num_channels[2], num_channels[3], layer_params[0][2], layer_params[1][2], layer_params[2][2]),LeakyReLU(LEAK),
-    Conv2d(num_channels[3], num_channels[4] layer_params[0][3], layer_params[1][3], layer_params[2][3]), LeakyReLU(LEAK),
+    Conv2d(num_channels[3], num_channels[4], layer_params[0][3], layer_params[1][3], layer_params[2][3]), LeakyReLU(LEAK),
     Conv2d(num_channels[4], num_channels[5], layer_params[0][4], layer_params[1][4], layer_params[2][4]), LeakyReLU(LEAK),
     Conv2d(num_channels[5], num_channels[6], layer_params[0][5], layer_params[1][5], layer_params[2][5]), LeakyReLU(LEAK))
 
@@ -80,7 +80,7 @@ def create_critic():
     Conv2d(512, 512, 1, 1, 0), LeakyReLU(LEAK))
 
   joint_mapping = nn.Sequential(
-    Conv2d(DIM * 4 + 512, 1024, 1, 1, 0), LeakyReLU(LEAK),
+    Conv2d(num_channels[6] + 512, 1024, 1, 1, 0), LeakyReLU(LEAK),
     Conv2d(1024, 1024, 1, 1, 0), LeakyReLU(LEAK),
     Conv2d(1024, 1, 1, 1, 0))
 
@@ -99,9 +99,9 @@ def main():
   device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
   wali = create_WALI().to(device)
 
-  optimizerEG = Adam(list(wali.get_encoder_parameters()) + list(wali.get_generator_parameters()), 
+  optimizerEG = Adam(list(wali.get_encoder_parameters()) + list(wali.get_generator_parameters()),
     lr=LEARNING_RATE, betas=(BETA1, BETA2))
-  optimizerC = Adam(wali.get_critic_parameters(), 
+  optimizerC = Adam(wali.get_critic_parameters(),
     lr=LEARNING_RATE, betas=(BETA1, BETA2))
 
 
@@ -111,11 +111,11 @@ def main():
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))])
   mold_img = ImageFolder('data/folder/train', transform)
-  
+
   loader = data.DataLoader(mold_img, BATCH_SIZE, shuffle=True)
-  
+
   noise = torch.randn(64, NLAT, 1, 1, device=device)
-  
+
   EG_losses, C_losses = [], []
   curr_iter = C_iter = EG_iter = 0
   C_update, EG_update = True, False
@@ -166,10 +166,10 @@ def main():
         # plot reconstructed images and samples
         wali.eval()
         real_x, rect_x = init_x[:32], wali.reconstruct(init_x[:32]).detach_()
-        rect_imgs = torch.cat((real_x.unsqueeze(1), rect_x.unsqueeze(1)), dim=1) 
+        rect_imgs = torch.cat((real_x.unsqueeze(1), rect_x.unsqueeze(1)), dim=1)
         rect_imgs = rect_imgs.view(64, NUM_CHANNELS, IMAGE_SIZE, IMAGE_SIZE).cpu()
         genr_imgs = wali.generate(noise).detach_().cpu()
-        utils.save_image(rect_imgs * 0.5 + 0.5, 'Runs/f_size/rect%d.png' % curr_iter)
+        utils.save_image(rect_imgs * 0.5 + 0.5, 'Runs/fsize/rect%d.png' % curr_iter)
         utils.save_image(genr_imgs * 0.5 + 0.5, 'Runs/fsize/genr%d.png' % curr_iter)
         wali.train()
 

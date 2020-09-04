@@ -6,7 +6,7 @@
 #BSUB -J BiGAN
 #BSUB -n 1
 #BSUB -gpu "num=1:mode=exclusive_process"
-#BSUB -W 00:35
+#BSUB -W 02:00
 #BSUB -R "rusage[mem=4GB]"
 #BSUB -u benja.lazar@gmail.com
 ##BSUB -B
@@ -21,4 +21,4 @@ module load python3
 module load cuda/10.2
 module load matplotlib/2.0.2-python-3.6.2
 
-python3 BiGAN_runner_hpc.py
+python3 BiGAN_runner_gpu.py
