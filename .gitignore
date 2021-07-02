@@ -6,3 +6,5 @@ __pycache__/
 BiGAN/*.err
 BiGAN/*.out
 BiGAN/batch_run.sh
+MvTEC/runs/
+MvTEC/__pycache__/
