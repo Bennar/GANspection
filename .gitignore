@@ -8,3 +8,6 @@ BiGAN/*.out
 BiGAN/batch_run.sh
 MvTEC/runs/
 MvTEC/__pycache__/
+MvTEC/*.err
+MvTEC/*.out
+MvTEC/batch_run.sh

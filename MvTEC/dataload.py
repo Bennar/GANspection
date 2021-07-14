@@ -10,11 +10,10 @@ from PIL import Image
 import torch
 from torch.utils.data import Dataset
 from torchvision import transforms as T
-from torch.utils.data import DataLoader
 
 # URL = 'ftp://guest:GU.205dldo@ftp.softronics.ch/mvtec_anomaly_detection/mvtec_anomaly_detection.tar.xz'
 
-CLASS_NAMES = ['bottle', 'cable', 'capsule', 'carpet', 'grid',
+CLASS_NAMES = ['num','bottle', 'cable', 'capsule', 'carpet', 'grid',
                'hazelnut', 'leather', 'metal_nut', 'pill', 'screw',
                'tile', 'toothbrush', 'transistor', 'wood', 'zipper']
 
@@ -93,22 +92,25 @@ class MVTecDataset(Dataset):
         return list(x), list(y), list(mask)
 
 #%%
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-# laver dataloader til en iter
-train_data_iter = iter(train_dataloader)
-
-# concater n eksempler
-n = 12
-images, labels, mask = train_data_iter.next()
-images_r = images
-for i in range(n-1):    
-    images, labels, mask = train_data_iter.next()
-    images_r = torch.cat((images_r,images),dim=0)
-
-# laver dem til et grid, så nparray og til sidst plt plotter
-images_r = torchvision.utils.make_grid(images_r,nrow=3)
-npimg = images_r.numpy()
-plt.imshow(np.transpose(npimg, (1, 2, 0)))
+# =============================================================================
+# 
+# import matplotlib.pyplot as plt
+# import numpy as np
+# 
+# # laver dataloader til en iter
+# train_data_iter = iter(train_dataloader)
+# 
+# # concater n eksempler
+# n = 12
+# images, labels, mask = train_data_iter.next()
+# images_r = images
+# for i in range(n-1):    
+#     images, labels, mask = train_data_iter.next()
+#     images_r = torch.cat((images_r,images),dim=0)
+# 
+# # laver dem til et grid, så nparray og til sidst plt plotter
+# images_r = torchvision.utils.make_grid(images_r,nrow=3)
+# npimg = images_r.numpy()
+# plt.imshow(np.transpose(npimg, (1, 2, 0)))
+# 
+# =============================================================================

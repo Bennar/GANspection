@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun 30 12:46:01 2021
+Created on Sat Jul  3 23:39:36 2021
 
 @author: lazar
 """
@@ -20,15 +20,15 @@ from dataload import MVTecDataset
 
 # Hyperparameters etc.
 device = "cuda" if torch.cuda.is_available() else "cpu"
-LEARNING_RATE = 1e-5
+LEARNING_RATE = 1e-4
 BATCH_SIZE = 1
 IMAGE_SIZE = 64
 CHANNELS_IMG = 3
 Z_DIM = 100
-NUM_EPOCHS = 3000
+NUM_EPOCHS = 5000
 FEATURES_CRITIC = 16
 FEATURES_GEN = 16
-CRITIC_ITERATIONS = 5
+CRITIC_ITERATIONS = 1
 LAMBDA_GP = 10
 
 
@@ -83,15 +83,13 @@ for epoch in range(NUM_EPOCHS):
         opt_gen.step()
 
         # Print losses occasionally and print to tensorboard
-        if batch_idx % 10 == 0 and batch_idx > 0:
-            print( f"Epoch [{epoch}/{NUM_EPOCHS}] Batch {batch_idx}/{len(loader)} \
-                  Loss D: {loss_critic:.4f}, loss G: {loss_gen:.4f}" )
-            writer.add_scalar("Loss/Train_Generator", loss_gen, epoch*len(dataset) + batch_idx*BATCH_SIZE)
-            writer.add_scalar("Loss/Train_Critic", loss_critic, epoch*len(dataset) + batch_idx*BATCH_SIZE)
+        if epoch % 200 == 0:
+            writer.add_scalar("Loss/Train_Generator",  , epoch)
+            writer.add_scalar("Loss/Train_Critic", loss_critic, epoch)
             with torch.no_grad():
                 fake = gen(fixed_noise)
                 # take out (up to) 32 examples
-                img_grid_real = torchvision.utils.make_grid(real[:2], normalize=True)
+                img_grid_real = torchvision.utils.make_grid(real[:1], normalize=True)
                 img_grid_fake = torchvision.utils.make_grid(fake[:32], normalize=True)
 
                 writer.add_image("Real", img_grid_real, global_step=step)
