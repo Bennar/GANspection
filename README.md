@@ -19,6 +19,8 @@ The model i use is a GAN-like structure named BiGAN or ALI. It was first suggest
 
 The structure allows us to do reconstructions of real samples, ** G(E(x)) **,
 
+![Recon](https://user-images.githubusercontent.com/35339379/129281354-29dd6b47-4c44-4490-8796-b0f7a81d364f.png)
+
 
 aswell as generation.
 
