@@ -26,6 +26,10 @@ The structure allows us to do reconstructions of real samples, ** G(E(x)) **,
 ![Recon](https://user-images.githubusercontent.com/35339379/129281354-29dd6b47-4c44-4490-8796-b0f7a81d364f.png)
 
 ## Anomaly Score
-\alpha
+With te task of determining weather a sample is an anomaly or not, I propose an Anomaly Score consisting of 3 terms. First, the l2 norm of the feature reprsentation. Since, at training, the generator is sampling from a standard normal distribution and the encoder is trained to transform a normal sample to the feature representation, we would expect the l2 norm to be equal to zero for normal samples, where as an anomaly would skew the distribution and therefore get something different from zero.
+ 
+ Second we use the l1 norm of the reconstruction error. The idea is that the networks have learned only transformation of normal features, thus when reconstructing an abnormal sample, it will not be able to reconstruct the abnormality. This method is often used in other similar setups, and especially when segmentation is also needed.
+ 
+ third we use the 
 
 ## Conclusion
