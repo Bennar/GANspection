@@ -17,14 +17,15 @@ The model i use is a GAN-like structure named BiGAN or ALI. It was first suggest
 
 ![BiGAN](https://user-images.githubusercontent.com/35339379/128866480-17861056-13e5-4e81-9909-50f13f6f6649.png)
 
+As with a normal GAN, we can generate fake samples. The generator was trained with feature representations sampled from a standard normal distribution, so we can see what happens when you draw from outside this distribution.
+
+![Gen](https://user-images.githubusercontent.com/35339379/129357397-a80f8c90-3667-4f29-a9e6-8105fc991af9.png)
+
 The structure allows us to do reconstructions of real samples, ** G(E(x)) **,
 
 ![Recon](https://user-images.githubusercontent.com/35339379/129281354-29dd6b47-4c44-4490-8796-b0f7a81d364f.png)
 
-
-aswell as generation.
-
-
 ## Anomaly Score
+\alpha
 
 ## Conclusion
