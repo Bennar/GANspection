@@ -31,10 +31,21 @@ With the task of determining whether a sample is an anomaly or not, I propose an
  Second we use the l1 norm of the reconstruction error. The idea is that the networks have learned only transformation of normal features, thus when reconstructing an abnormal sample, it will not be able to reconstruct the abnormality. The difference between the sample and the abnormality-free-reconstruction is then non-zero around a abnormality. This method is often used in other similar setups, and especially when segmentation is also needed.
  
  third we use the l2 distance of the second-to-last layer in the discriminator, of inputs of sample and feature representation and reconstruction and feature reprsentation. This is motivated by results from other research articles and the thought that this embedding will show divergence beacause of the failed encoding and generation of the model.
- 
-The terms are weighted, and the collected anomaly score is then threshold to determine whether a sample is abnormal or not. These are hyperparameters to be determined on the training set
+
+![hist](https://user-images.githubusercontent.com/35339379/129928744-f653d25c-2781-416d-9ecb-47f76ef1f3d7.png)
+
+The terms are weighted, and the collected anomaly score is then threshold to determine whether a sample is abnormal or not. These are hyperparameters to be determined.
 
 **A = α ||E(x)||<sub>2</sub> + β ||x - G(E(x))||<sub>1</sub> + γ ||f(x,E(x)) - f(G(E(x)),E(x))||<sub>2</sub>**
 
+![ROC](https://user-images.githubusercontent.com/35339379/129928846-785f0045-1101-4f3a-89a1-e4ad8bd95a83.png)
+
+| Measure        | auROC           |
+| ------------- |:-------------:|
+| Feature L2     | 0.89 |
+| Reconstruction L1      | 0.71     |
+| Discriminator feature L2 | 0.60      |
+| Anomaly Score | 0.83      |
 
 ## Conclusion
+
