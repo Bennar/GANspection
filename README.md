@@ -21,15 +21,20 @@ As with a normal GAN, we can generate fake samples. The generator was trained wi
 
 ![Gen](https://user-images.githubusercontent.com/35339379/129357397-a80f8c90-3667-4f29-a9e6-8105fc991af9.png)
 
-The structure allows us to do reconstructions of real samples, ** G(E(x)) **,
+The structure allows us to do reconstructions of real samples, **G(E(x))**,
 
 ![Recon](https://user-images.githubusercontent.com/35339379/129281354-29dd6b47-4c44-4490-8796-b0f7a81d364f.png)
 
 ## Anomaly Score
-With te task of determining weather a sample is an anomaly or not, I propose an Anomaly Score consisting of 3 terms. First, the l2 norm of the feature reprsentation. Since, at training, the generator is sampling from a standard normal distribution and the encoder is trained to transform a normal sample to the feature representation, we would expect the l2 norm to be equal to zero for normal samples, where as an anomaly would skew the distribution and therefore get something different from zero.
+With the task of determining whether a sample is an anomaly or not, I propose an Anomaly Score consisting of 3 terms. First, the l2 norm of the feature reprsentation. Since, at training, the generator is sampling from a standard normal distribution and the encoder is trained to transform a normal sample to the feature representation, we would expect the l2 norm to be equal to zero for normal samples, where as an anomaly would skew the distribution and therefore get something different from zero.
  
- Second we use the l1 norm of the reconstruction error. The idea is that the networks have learned only transformation of normal features, thus when reconstructing an abnormal sample, it will not be able to reconstruct the abnormality. This method is often used in other similar setups, and especially when segmentation is also needed.
+ Second we use the l1 norm of the reconstruction error. The idea is that the networks have learned only transformation of normal features, thus when reconstructing an abnormal sample, it will not be able to reconstruct the abnormality. The difference between the sample and the abnormality-free-reconstruction is then non-zero around a abnormality. This method is often used in other similar setups, and especially when segmentation is also needed.
  
- third we use the 
+ third we use the l2 distance of the second-to-last layer in the discriminator, of inputs of sample and feature representation and reconstruction and feature reprsentation. This is motivated by results from other research articles and the thought that this embedding will show divergence beacause of the failed encoding and generation of the model.
+ 
+The terms are weighted, and the collected anomaly score is then threshold to determine whether a sample is abnormal or not. These are hyperparameters to be determined on the training set
+
+**A = α ||E(x)||<sub>2</sub> + β ||x - G(E(x))||<sub>1</sub> + γ ||f(x,E(x)) - f(G(E(x)),E(x))||<sub>2</sub>**
+
 
 ## Conclusion
