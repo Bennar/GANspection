@@ -48,4 +48,10 @@ The terms are weighted, and the collected anomaly score is then threshold to det
 | Anomaly Score | 0.83      |
 
 ## Conclusion
+With the objective of doing semi-supervised anomaly detection the GANspection method succeds. Yet, with an average auROC over the MVTec dataset, GANspection does not perform on the same level as other top methods [(see "detection auroc")](https://paperswithcode.com/sota/anomaly-detection-on-mvtec-ad). However, compared to other top-performing-models GANspection does not require pretrained networks or human-selected-features as most of them do. In addition, GANspection is also a generative model, allowing for synthesization of data, and are as far as can be found, the best performing generative model.
 
+Futher work with the GANspection method would include a larger hyperparameter optimization, since not much have been done here.
+
+
+## Install and run on your setup
+(Work in progress)
