@@ -7,7 +7,7 @@ Anomaly detection on images is a fundamental computer vision task and are of gre
 ## The Data: MVTec AD
 [MVTec AD](https://www.mvtec.com/company/research/datasets/mvtec-ad) is a dataset for benchmarking anomaly detection methods with a focus on industrial inspection. It contains over 5000 high-resolution images divided into fifteen different object and texture categories. Each category comprises a set of defect-free training images and a test set of images with various kinds of defects as well as images without defects.
 
-To exemplify, i will focus on the *hazelnut* images.
+To exemplify, I will focus on the *hazelnut* images.
 
 ![Hazelnut_data](https://user-images.githubusercontent.com/35339379/129034371-315f038a-b1fe-4543-8753-e1fa59b0e1a0.png)
 
